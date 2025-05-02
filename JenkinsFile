@@ -3,13 +3,13 @@ pipeline {
 
     environment {
         NODE_VERSION = '20.18.0'
-        DOCKER_IMAGE = 'ton-image-docker/backend' // à adapter
+        DOCKER_IMAGE = 'jenkins-trinity-server' 
     }
 
     stages {
         stage('Test Backend') {
             agent {
-                any {
+                docker {
                     image "node:${NODE_VERSION}-alpine"
                 }
             }
@@ -23,7 +23,7 @@ pipeline {
 
         stage('Test Client') {
             agent {
-                any {
+                docker {
                     image "node:${NODE_VERSION}-alpine"
                 }
             }
@@ -54,7 +54,7 @@ pipeline {
 
         stage('Build Client') {
             agent {
-                any {
+                docker {
                     image "node:${NODE_VERSION}-alpine"
                 }
             }
