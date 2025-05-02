@@ -2,7 +2,7 @@
 
 CONTAINER_NAME=jenkins
 
-docker cp "~/Jenkins-Trinity/jenkins/plugins.txt" "$CONTAINER_NAME":/tmp/plugins.txt
+docker cp "/jenkins/plugins.txt" "$CONTAINER_NAME":/tmp/plugins.txt
 
 docker exec -u 0 "$CONTAINER_NAME" bash -c "\
   jenkins-plugin-cli --plugin-file /tmp/plugins.txt --plugins delivery-pipeline-plugin:1.3.2 deployit-plugin && \
