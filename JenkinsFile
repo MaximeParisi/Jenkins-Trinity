@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Test Backend') {
             agent {
-                docker {
+                any {
                     image "node:${NODE_VERSION}-alpine"
                 }
             }
@@ -23,7 +23,7 @@ pipeline {
 
         stage('Test Client') {
             agent {
-                docker {
+                any {
                     image "node:${NODE_VERSION}-alpine"
                 }
             }
@@ -54,7 +54,7 @@ pipeline {
 
         stage('Build Client') {
             agent {
-                docker {
+                any {
                     image "node:${NODE_VERSION}-alpine"
                 }
             }
