@@ -1,0 +1,47 @@
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      HOST: 0.0.0.0
+      WATCHPACK_POLLING: true
+      FAST_REFRESH: false
+      REACT_APP_SERVER_URL: "http://localhost:3000"
+    ports:
+      - 4000:4000
+    volumes:
+      - ./client/src:/usr/src/app/src
+      - ./client/public:/usr/src/app/public
+
+  server:
+    build:
+      context: ./backend
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/node-boilerplate
+      - CLIENT_URL=http://localhost:4000
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/app
+    networks:
+      - node-network
+
+  mongodb:
+    image: mongo:6-jammy
+    ports:
+      - "27017:27017"
+    volumes:
+      - dbdata6:/data/db
+    networks:
+      - node-network
+
+volumes:
+  dbdata6:
+networks:
+  node-network:
+    driver: bridge
