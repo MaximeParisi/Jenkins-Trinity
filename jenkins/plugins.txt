@@ -1,0 +1,8 @@
+blueocean
+workflow-aggregator
+github
+docker-workflow
+ssh-agent
+credentials-binding
+ansicolor
+nodejs
