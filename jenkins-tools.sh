@@ -1,5 +1,7 @@
 #!/bin/bash
 
+CONTAINER_NAME=jenkins
+
 docker cp "~/Documents/Jenkins-Trinity/jenkins/plugins.txt" "$CONTAINER_NAME":/tmp/plugins.txt
 
 docker exec -u 0 "$CONTAINER_NAME" bash -c "\
