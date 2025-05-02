@@ -1,6 +1,5 @@
 blueocean
 
-# Plugins essentiels pour pipeline
 workflow-aggregator
 pipeline-stage-view
 pipeline-model-definition
@@ -12,7 +11,6 @@ workflow-step-api
 workflow-api
 workflow-job
 
-# Git / GitHub
 git
 github
 scm-api
@@ -21,7 +19,6 @@ git-server
 pipeline-github
 pipeline-github-lib
 
-# Sécurité / Credentials
 credentials
 credentials-binding
 ssh-credentials
@@ -29,19 +26,16 @@ plain-credentials
 script-security
 matrix-auth
 
-# Notification / Email
 mailer
 email-ext
 jakarta-mail-api
 token-macro
 
-# Console et affichage
 ansicolor
 timestamper
 structs
 display-url-api
 
-# Divers utiles
 docker-workflow
 nodejs
 json-path-api
@@ -56,10 +50,9 @@ variant
 theme-manager
 dark-theme
 
-# Nettoyage et build
 ws-cleanup
 build-timeout
 
-# Optionnels
 gradle
 ant
+
