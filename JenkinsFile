@@ -1,22 +1,17 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image "node:${NODE_VERSION}-alpine"
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Optionnel, seulement si nécessaire
+        }
+    }
 
     environment {
         NODE_VERSION = '20.18.0'
     }
 
     stages {
-
         stage('Test Backend') {
-            agent {
-                docker {
-                    image 'docker:19.03.12'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
-            agent { 
-                docker { 
-                    image "node:${NODE_VERSION}-alpine" } }
             steps {
                 dir('backend') {
                     sh 'npm install'
@@ -26,14 +21,13 @@ pipeline {
         }
 
         stage('Test Client') {
-            agent { docker { image "node:${NODE_VERSION}-alpine" } }
             environment {
                 REACT_APP_PAYPAL_CLIENT_ID = credentials('PAYPAL_CLIENT_ID')
             }
             steps {
                 dir('client') {
-                sh 'npm ci'
-                sh 'npm test'
+                    sh 'npm ci'
+                    sh 'npm test'
                 }
             }
         }
@@ -41,25 +35,24 @@ pipeline {
         stage('Build Backend Docker Image') {
             steps {
                 dir('backend') {
-                script {
-                    docker.withRegistry('', 'dockerhub-credentials-id') {
-                    def image = docker.build("${DOCKER_IMAGE}:back_${env.BRANCH_NAME}")
-                    image.push()
+                    script {
+                        docker.withRegistry('', 'dockerhub-credentials-id') {
+                            def image = docker.build("${DOCKER_IMAGE}:back_${env.BRANCH_NAME}")
+                            image.push()
+                        }
                     }
-                }
                 }
             }
         }
 
         stage('Build Client') {
-            agent { docker { image "node:${NODE_VERSION}-alpine" } }
             environment {
                 REACT_APP_PAYPAL_CLIENT_ID = credentials('PAYPAL_CLIENT_ID')
             }
             steps {
                 dir('client') {
-                sh 'npm ci'
-                sh 'npm run build'
+                    sh 'npm ci'
+                    sh 'npm run build'
                 }
                 archiveArtifacts artifacts: 'client/build/**', allowEmptyArchive: true
             }
@@ -71,16 +64,16 @@ pipeline {
             }
             steps {
                 withCredentials([
-                sshUserPrivateKey(credentialsId: 'dev-ssh-key', keyFileVariable: 'KEY')
+                    sshUserPrivateKey(credentialsId: 'dev-ssh-key', keyFileVariable: 'KEY')
                 ]) {
-                sh '''
-                    scp -i $KEY -o StrictHostKeyChecking=no compose-staging.yml $DEV_SSH_USER@$DEV_SERVER_IP:~/
-                    scp -i $KEY -o StrictHostKeyChecking=no client/build/* $DEV_SSH_USER@$DEV_SERVER_IP:/var/www/dev.gotham.titlepack.io/
-                    ssh -i $KEY -o StrictHostKeyChecking=no $DEV_SSH_USER@$DEV_SERVER_IP '
-                    docker pull $DOCKER_IMAGE:back_${BRANCH_NAME}
-                    docker compose --env-file .env-staging -f compose-staging.yml up -d
-                    '
-                '''
+                    sh '''
+                        scp -i $KEY -o StrictHostKeyChecking=no compose-staging.yml $DEV_SSH_USER@$DEV_SERVER_IP:~/
+                        scp -i $KEY -o StrictHostKeyChecking=no client/build/* $DEV_SSH_USER@$DEV_SERVER_IP:/var/www/dev.gotham.titlepack.io/
+                        ssh -i $KEY -o StrictHostKeyChecking=no $DEV_SSH_USER@$DEV_SERVER_IP '
+                        docker pull $DOCKER_IMAGE:back_${BRANCH_NAME}
+                        docker compose --env-file .env-staging -f compose-staging.yml up -d
+                        '
+                    '''
                 }
             }
         }
@@ -91,16 +84,16 @@ pipeline {
             }
             steps {
                 withCredentials([
-                sshUserPrivateKey(credentialsId: 'prod-ssh-key', keyFileVariable: 'KEY')
+                    sshUserPrivateKey(credentialsId: 'prod-ssh-key', keyFileVariable: 'KEY')
                 ]) {
-                sh '''
-                    scp -i $KEY -o StrictHostKeyChecking=no compose-prod.yml $PROD_SSH_USER@$PROD_SERVER_IP:~/
-                    scp -i $KEY -o StrictHostKeyChecking=no client/build/* $PROD_SSH_USER@$PROD_SERVER_IP:/var/www/gotham.titlepack.io/
-                    ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP '
-                    docker pull $DOCKER_IMAGE:back_${BRANCH_NAME}
-                    docker compose --env-file .env-prod -f compose-prod.yml up -d
-                    '
-                '''
+                    sh '''
+                        scp -i $KEY -o StrictHostKeyChecking=no compose-prod.yml $PROD_SSH_USER@$PROD_SERVER_IP:~/
+                        scp -i $KEY -o StrictHostKeyChecking=no client/build/* $PROD_SSH_USER@$PROD_SERVER_IP:/var/www/gotham.titlepack.io/
+                        ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP '
+                        docker pull $DOCKER_IMAGE:back_${BRANCH_NAME}
+                        docker compose --env-file .env-prod -f compose-prod.yml up -d
+                        '
+                    '''
                 }
             }
         }
