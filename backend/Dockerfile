@@ -3,7 +3,6 @@
 ARG NODE_VERSION=20.18.0
 FROM node:${NODE_VERSION}
 
-RUN apk add --no-cache docker-cli
 
 # Utiliser l'environnement de production par défaut.
 ARG NODE_ENV=development
