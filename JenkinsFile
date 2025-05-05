@@ -48,20 +48,19 @@ pipeline {
         }
 
         stage('Build Backend Docker Image') {
-            stage('Build Backend Docker Image') {
-                steps {
-                    dir('backend') {
-                        script {
-                            withEnv(['DOCKER_BUILDKIT=1']) {
-                                sh 'docker buildx build --tag jenkins-trinity-server:back_null .'
-                            }
-                            docker.withRegistry('', 'dockerhub') {
-                                def image = docker.build("${DOCKER_IMAGE}:back_${env.BRANCH_NAME}")
-                                image.push()
-                            }
+            steps {
+                dir('backend') {
+                    script {
+                        withEnv(['DOCKER_BUILDKIT=1']) {
+                            // Utiliser buildx avec --tag au lieu de -t
+                            sh 'docker buildx build --tag jenkins-trinity-server:back_null .'
+                        }
+                        docker.withRegistry('', 'dockerhub') {
+                            def image = docker.build("${DOCKER_IMAGE}:back_${env.BRANCH_NAME}")
+                            image.push()
                         }
                     }
-                }   
+                }
             }
         }
 
