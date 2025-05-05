@@ -50,7 +50,7 @@ pipeline {
  stage('Build Backend Docker Image with Buildx') {
     agent {
         docker {
-            image 'ton-image-custom-avec-buildx'
+            image 'jenkins-trinity-server'
             args '--privileged' // nécessaire pour binfmt
         }
     }
