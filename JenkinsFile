@@ -54,6 +54,9 @@ pipeline {
         script {
             echo "Building Docker image for branch ${env.BRANCH_NAME}"
             echo "Using image name ${DOCKER_IMAGE}"
+            sh 'docker version'
+sh 'docker buildx version || echo "Buildx not available"'
+
 
             sh "docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKER_IMAGE}:back_${env.BRANCH_NAME} backend/"
             sh "docker push ${DOCKER_IMAGE}:back_${env.BRANCH_NAME}"
