@@ -51,6 +51,9 @@ pipeline {
             steps {
                 dir('backend') {
                     script {
+                        withEnv(['DOCKER_BUILDKIT=1']) {
+                        sh 'docker build -t jenkins-trinity-server:back_null .'
+                        }
                         docker.withRegistry('', 'dockerhub') {
                             def image = docker.build("${DOCKER_IMAGE}:back_${env.BRANCH_NAME}")
                             image.push()
