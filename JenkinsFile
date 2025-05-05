@@ -55,10 +55,6 @@ pipeline {
             }
         
             steps {
-                dir('backend') {
-                    sh 'npm ci' 
-                    sh 'npm run build' 
-                }
                 script {
                     docker.withRegistry('', 'dockerhub') {
                         def image = docker.build("${DOCKER_IMAGE}:back_${env.BRANCH_NAME}")
@@ -80,8 +76,7 @@ pipeline {
             steps {
                 dir('client') {
                     sh 'npm ci'
-                    //sh 'npm run build'
-                    sh 'react-scripts build'
+                    sh 'npm run build'
                 }
                 archiveArtifacts artifacts: 'client/build/**', allowEmptyArchive: true
             }
