@@ -47,22 +47,32 @@ pipeline {
             }
         }
 
-  stage('Build Backend Docker Image with Buildx') {
-    agent any
-    
+ stage('Build Backend Docker Image with Buildx') {
+    agent {
+        docker {
+            image 'ton-image-custom-avec-buildx'
+            args '--privileged' // nécessaire pour binfmt
+        }
+    }
+
     steps {
         script {
             echo "Building Docker image for branch ${env.BRANCH_NAME}"
             echo "Using image name ${DOCKER_IMAGE}"
+
+            // Vérification de Docker et Buildx
             sh 'docker version'
-sh 'docker buildx version || echo "Buildx not available"'
+            sh 'docker buildx version || echo "Buildx not available"'
 
-
+            // Build de l'image Docker avec Buildx
             sh "docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKER_IMAGE}:back_${env.BRANCH_NAME} backend/"
+
+            // Push de l'image
             sh "docker push ${DOCKER_IMAGE}:back_${env.BRANCH_NAME}"
         }
     }
 }
+
 
 
 

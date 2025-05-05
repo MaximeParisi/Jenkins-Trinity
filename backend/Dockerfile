@@ -10,6 +10,11 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 
+RUN apk add --no-cache bash curl git && \
+    docker buildx install && \
+    docker buildx version
+
+
 # Installer les dépendances
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=package-lock.json,target=package-lock.json \
