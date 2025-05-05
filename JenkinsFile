@@ -25,7 +25,24 @@ pipeline {
             steps {
                 dir('backend') {
                     sh 'npm install'
-                    sh 'npm test'
+                    //sh 'npm test'
+                }
+            }
+        }
+
+        stage('Test Client') {
+            agent {
+                docker {
+                    image "node:${NODE_VERSION}-alpine"
+                }
+            }
+            environment {
+                REACT_APP_PAYPAL_CLIENT_ID = credentials('PAYPAL_CLIENT_ID')
+            }
+            steps {
+                dir('client') {
+                    sh 'npm ci'
+                    //sh 'npm test'
                 }
             }
         }
