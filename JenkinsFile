@@ -57,7 +57,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
-                        def image = docker.build("${IMAGE_NAME}")
+                        def image = docker.build("${IMAGE_NAME}", "backend/")
                         image.push()
                     }
                 }
