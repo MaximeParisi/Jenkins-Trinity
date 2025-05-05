@@ -80,7 +80,7 @@ pipeline {
             steps {
                 dir('client') {
                     sh 'npm ci'
-                    sh 'npm run build'
+                    //sh 'npm run build'
                 }
                 archiveArtifacts artifacts: 'client/build/**', allowEmptyArchive: true
             }
