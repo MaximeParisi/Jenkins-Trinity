@@ -7,6 +7,15 @@ pipeline {
     }
 
     stages {
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    '''
+                }
+            }
+        }
         stage('Test Backend') {
             agent {
                 docker {
@@ -39,7 +48,6 @@ pipeline {
         }
 
         stage('Build Backend Docker Image') {
-            // Pas dans un conteneur, Docker requis sur l'agent Jenkins
             steps {
                 dir('backend') {
                     script {
