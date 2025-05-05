@@ -81,6 +81,7 @@ pipeline {
                 dir('client') {
                     sh 'npm ci'
                     //sh 'npm run build'
+                    sh 'react-scripts build'
                 }
                 archiveArtifacts artifacts: 'client/build/**', allowEmptyArchive: true
             }
