@@ -47,20 +47,21 @@ pipeline {
             }
         }
 
-       stage('Build Backend Docker Image with Buildx') {
-            agent any             
-            steps {
-                script {
-                    sh 'export DOCKER_CLI_EXPERIMENTAL=enabled'
-                    sh 'docker buildx create --use'  
-                    
-                    def image = sh(script: "docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKER_IMAGE}:back_${env.BRANCH_NAME} backend/", returnStdout: true).trim()
+      stage('Build Backend Docker Image with Buildx') {
+    agent any  
+    
+    steps {
+        script {
+            sh 'export DOCKER_CLI_EXPERIMENTAL=enabled'
+            
+            sh 'docker buildx create --name mybuilder --use'  
 
-                    sh "docker push ${DOCKER_IMAGE}:back_${env.BRANCH_NAME}"
-                }
-            }
+            def image = sh(script: "docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKER_IMAGE}:back_${env.BRANCH_NAME} backend/", returnStdout: true).trim()
+
+            sh "docker push ${DOCKER_IMAGE}:back_${env.BRANCH_NAME}"
         }
-
+    }
+}
 
 
         stage('Build Client') {
