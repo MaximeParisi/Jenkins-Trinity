@@ -48,19 +48,16 @@ pipeline {
         }
 
         stage('Build Backend Docker Image') {
-            agent {
-                docker {
-                    image 'node:20.18.0-alpine' 
-                }
-            }
-
+            agent any 
+            
             steps {
                 script {
                     def image = docker.build("${DOCKER_IMAGE}:back_${env.BRANCH_NAME}", 'backend/')
-                    image.push()
+                    image.push() 
                 }
             }
         }
+
 
         stage('Build Client') {
             agent {
