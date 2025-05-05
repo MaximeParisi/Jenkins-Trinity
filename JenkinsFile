@@ -47,22 +47,25 @@ pipeline {
             }
         }
 
-        stage('Build Backend Docker Image') {
-            agent any
-
-            environment {
-                IMAGE_NAME = "${DOCKER_IMAGE}:back_${env.BRANCH_NAME}"
+       stage('Build Backend Docker Image') {
+            agent {
+                docker {
+                    image "node:${NODE_VERSION}-alpine"
+                }
             }
 
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
-                        def image = docker.build("${IMAGE_NAME}", "backend/")
-                        image.push()
+                    withEnv(["DOCKER_BUILDKIT=1"]) {
+                        docker.withRegistry('', 'dockerhub') {
+                            def image = docker.build("${DOCKER_IMAGE}:back_${env.BRANCH_NAME}", "backend/")
+                            image.push()
+                        }
                     }
                 }
             }
         }
+
 
 
         stage('Build Client') {
