@@ -4,6 +4,8 @@ pipeline {
     environment {
         NODE_VERSION = '20.18.0'
         DOCKER_IMAGE = 'jenkins-trinity-server' 
+        DOCKER_USER = 'maximeparisi'
+        BRANCH_NAME = 'main'
     }
 
     stages {
@@ -48,12 +50,14 @@ pipeline {
         }
 
         stage('Build Backend Docker Image') {
-            agent any 
-            
+            agent any
             steps {
                 script {
-                    def image = docker.build("${DOCKER_IMAGE}:back_${env.BRANCH_NAME}", 'backend/')
-                    image.push() 
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        def image = docker.build("${DOCKER_USER}/${DOCKER_IMAGE}:back_${env.BRANCH_NAME}", 'backend/')
+                        sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                        image.push()
+                    }
                 }
             }
         }
