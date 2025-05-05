@@ -52,7 +52,7 @@ stage('Build Backend Docker Image') {
         dir('backend') {
             script {
                 withEnv(['DOCKER_BUILDKIT=1']) {
-                    sh 'docker buildx build --file Dockerfile --tag jenkins-trinity-server:back_null --push .'
+                    sh 'docker buildx build -f Dockerfile --tag jenkins-trinity-server:back_null --push .'
                 }
                 docker.withRegistry('', 'dockerhub') {
                     def image = docker.build("${DOCKER_IMAGE}:back_${env.BRANCH_NAME}")
