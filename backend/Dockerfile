@@ -26,9 +26,6 @@ EXPOSE 3000
 COPY entrypoint.sh wait-for-it.sh ./
 RUN chmod +x ./entrypoint.sh ./wait-for-it.sh
 
-# Exécuter l'application en tant qu'utilisateur non-root
-USER node
-
 
 # Exécuter l'application
 CMD ["sh", "./entrypoint.sh"]
