@@ -49,19 +49,18 @@ pipeline {
             }
         }
 
-        stage('Build Backend Docker Image') {
-        agent any
-        steps {
-            withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                script {
-                     def image = docker.build("${DOCKER_USER}/${DOCKER_IMAGE}:back_${env.BRANCH_NAME}", 'backend/')
-                        sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-                        image.push()
-                    
-                }
-            }
-        }
-    }
+        // stage('Build Backend Docker Image') {
+        //     agent any
+        //     steps {
+        //         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+        //             script {
+        //                 sh "docker build -t ${DOCKER_USER}/${DOCKER_IMAGE}:back_${env.BRANCH_NAME ?: 'main'} backend/"
+        //                 sh "echo '$DOCKER_PASS' | docker login -u '$DOCKER_USER' --password-stdin"
+        //                 sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}:back_${env.BRANCH_NAME ?: 'main'}"
+        //             }
+        //         }
+        //     }
+        // }
 
 
         stage('Build Client') {
