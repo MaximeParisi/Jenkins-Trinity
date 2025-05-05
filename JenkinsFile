@@ -47,13 +47,12 @@ pipeline {
             }
         }
 
-      stage('Build Backend Docker Image') {
+stage('Build Backend Docker Image') {
     steps {
         dir('backend') {
             script {
-                withEnv(['DOCKER_BUILDKIT=1']) {
-                    sh 'docker buildx build --file Dockerfile --tag jenkins-trinity-server:back_null --push .'
-                }
+                sh 'docker build --file Dockerfile --tag jenkins-trinity-server:back_null .'
+                
                 docker.withRegistry('', 'dockerhub') {
                     def image = docker.build("${DOCKER_IMAGE}:back_${env.BRANCH_NAME}")
                     image.push()
@@ -62,6 +61,7 @@ pipeline {
         }
     }
 }
+
 
         stage('Build Client') {
             agent {
