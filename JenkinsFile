@@ -51,7 +51,7 @@ pipeline {
             steps {
                 dir('backend') {
                     script {
-                        docker.withRegistry('', 'dockerhub-credentials-id') {
+                        docker.withRegistry('', 'dockerhub') {
                             def image = docker.build("${DOCKER_IMAGE}:back_${env.BRANCH_NAME}")
                             image.push()
                         }
