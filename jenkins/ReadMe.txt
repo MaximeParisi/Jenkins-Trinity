@@ -14,3 +14,7 @@ docker run -d --name jenkins \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /usr/bin/docker:/usr/bin/docker \
   jenkins/jenkins:lts
+ 
+ OR
+
+ docker start jenkins

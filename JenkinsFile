@@ -65,15 +65,13 @@ pipeline {
             agent any
             steps {
                 script {
-                    docker.withRegistry('http://217.182.61.107:3000', 'dockerhub') {
+                    docker.withRegistry('http://217.182.61.107:3000', '5c28fd6b-7e60-49db-9df3-8a41b7afdf2b') {
                         def customImage = docker.build("217.182.61.107:3000/${DOCKER_IMAGE}:back_${BRANCH_NAME}")
                         customImage.push()
                     }
                 }
             }
         }
-
-
 
         stage('Build Client') {
             agent {
