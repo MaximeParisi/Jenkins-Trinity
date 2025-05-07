@@ -49,18 +49,30 @@ pipeline {
             }
         }
 
-        stage('Build Backend Docker Image') {
+        // stage('Build Backend Docker Image') {
+        //     agent any
+        //     steps {
+        //         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+        //             script {
+        //                 sh "docker build ${DOCKER_USER}/${DOCKER_IMAGE}:back_${env.BRANCH_NAME ?: 'main'} backend/"
+        //                 sh "echo '$DOCKER_PASS' | docker login -u '$DOCKER_USER' --password-stdin"
+        //                 sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}:back_${env.BRANCH_NAME ?: 'main'}"
+        //             }
+        //         }
+        //     }
+        // }
+       stage('DOCKER - Build/Push registry') {
             agent any
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    script {
-                        sh "docker build -t ${DOCKER_USER}/${DOCKER_IMAGE}:back_${env.BRANCH_NAME ?: 'main'} backend/"
-                        sh "echo '$DOCKER_PASS' | docker login -u '$DOCKER_USER' --password-stdin"
-                        sh "docker push ${DOCKER_USER}/${DOCKER_IMAGE}:back_${env.BRANCH_NAME ?: 'main'}"
+                script {
+                    docker.withRegistry('http://217.182.61.107:3000', 'dockerhub') {
+                        def customImage = docker.build("217.182.61.107:3000/${DOCKER_IMAGE}:back_${BRANCH_NAME}")
+                        customImage.push()
                     }
                 }
             }
         }
+
 
 
         stage('Build Client') {
