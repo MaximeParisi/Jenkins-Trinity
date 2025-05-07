@@ -18,3 +18,5 @@ docker run -d --name jenkins \
  OR
 
  docker start jenkins
+
+ docker run -d -p 3000:5000 --name registry registry:2
