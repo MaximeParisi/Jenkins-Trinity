@@ -66,7 +66,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('http://217.182.61.107:5000', '5c28fd6b-7e60-49db-9df3-8a41b7afdf2b') {
-                        def customImage = docker.build("217.182.61.107:5000/${DOCKER_IMAGE}:back_${BRANCH_NAME}")
+                        def customImage = docker.build("${DOCKER_IMAGE}", "backend")
                         customImage.push()
                     }
                 }
