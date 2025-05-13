@@ -130,7 +130,8 @@ pipeline {
                 ]) {
                        sh '''
                         scp -i $KEY -o StrictHostKeyChecking=no compose-prod.yml $PROD_SSH_USER@$PROD_SERVER_IP:/home/debian/Jenkins-Trinity
-                        scp -i $KEY -o StrictHostKeyChecking=no client/build/* $PROD_SSH_USER@$PROD_SERVER_IP:/var/www/
+                        ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP 'mkdir -p /home/debian/www'
+                        scp -i $KEY -o StrictHostKeyChecking=no client/build/* $PROD_SSH_USER@$PROD_SERVER_IP:/home/debian/www
                         ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP '
                         docker login -u "$DOCKER_USER" --password "$DOCKER_PASS"
                         docker pull $DOCKER_IMAGE:back_main
