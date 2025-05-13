@@ -56,6 +56,7 @@ pipeline {
         // stage('Build Backend Docker Image') {
         //     agent any
         //     steps {
+        
         //         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
         //             script {
         //                 sh "docker build ${DOCKER_USER}/${DOCKER_IMAGE}:back_${env.BRANCH_NAME ?: 'main'} backend/"
