@@ -108,17 +108,15 @@ pipeline {
                     {
                     sh '''
                         scp -i $KEY -o StrictHostKeyChecking=no compose-staging.yml $DEV_SSH_USER@$DEV_SERVER_IP:/home/debian/Jenkins-Trinity
-                        tar -czf client_build.tar.gz -C client build
-                        scp -i $KEY -o StrictHostKeyChecking=no client_build.tar.gz $DEV_SSH_USER@$DEV_SERVER_IP:/home/debian/
-                        ssh -i $KEY -o StrictHostKeyChecking=no $DEV_SSH_USER@$DEV_SERVER_IP '
-                            tar -xzf /home/debian/client_build.tar.gz -C /var/www/dev.gotham.titlepack.io/
-                        '
+                        cd client && npm install && npm run build
+                        scp -i $KEY -o StrictHostKeyChecking=no client/build/* $DEV_SSH_USER@$DEV_SERVER_IP:/var/www/dev.gotham.titlepack.io/
                         ssh -i $KEY -o StrictHostKeyChecking=no $DEV_SSH_USER@$DEV_SERVER_IP '
                         docker login -u "$DOCKER_USER" --password "$DOCKER_PASS"
-                        docker pull 217.182.61.107:5000/jenkins-trinity-server
+                        docker pull $DOCKER_IMAGE:back_dev
                         docker compose --env-file .env-staging -f compose-staging.yml up -d
                         '
                     '''
+                   
                 }
             }
         }
@@ -132,21 +130,16 @@ pipeline {
                     sshUserPrivateKey(credentialsId: 'prod-ssh-key', keyFileVariable: 'KEY'),
                     usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
                 ]) {
-                    sh '''
+                       sh '''
                         scp -i $KEY -o StrictHostKeyChecking=no compose-prod.yml $PROD_SSH_USER@$PROD_SERVER_IP:/home/debian/Jenkins-Trinity
-
-                        cd client && npm install && npm run build
-
-                        tar -czf client_build.tar.gz -C client build
-                        scp -i $KEY -o StrictHostKeyChecking=no client_build.tar.gz $PROD_SSH_USER@$PROD_SERVER_IP:/home/debian/
-
+                        scp -i $KEY -o StrictHostKeyChecking=no client/build/* $PROD_SSH_USER@$PROD_SERVER_IP:/var/www/gotham.titlepack.io/
                         ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP '
-                            tar -xzf /home/debian/client_build.tar.gz -C /var/www/gotham.titlepack.io/
-                            docker login -u "$DOCKER_USER" --password "$DOCKER_PASS"
-                            docker pull 217.182.61.107:5000/jenkins-trinity-server
-                            docker compose --env-file .env-prod -f compose-prod.yml up -d
+                        docker login -u "$DOCKER_USER" --password "$DOCKER_PASS"
+                        docker pull $DOCKER_IMAGE:back_main
+                        docker compose --env-file .env-prod -f compose-prod.yml up -d
                         '
                     '''
+                   
                 }
             }
         }
