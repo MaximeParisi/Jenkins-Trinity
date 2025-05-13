@@ -111,7 +111,7 @@ pipeline {
                         scp -i $KEY -o StrictHostKeyChecking=no client/build/* $DEV_SSH_USER@$DEV_SERVER_IP:/var/www/dev.gotham.titlepack.io/
                         ssh -i $KEY -o StrictHostKeyChecking=no $DEV_SSH_USER@$DEV_SERVER_IP '
                         docker login -u "$DOCKER_USER" --password "$DOCKER_PASS"
-                        docker pull $DOCKER_IMAGE:back_dev
+                        docker pull $DOCKER_IMAGE:latest
                         docker compose --env-file .env-staging -f compose-staging.yml up -d
                         '
                     '''                   
@@ -119,28 +119,28 @@ pipeline {
             }
         }
 
-       stage('Deploy to Prod') {
-    when {
-        branch 'main'
-    }
-    steps {
-        withCredentials([
-            sshUserPrivateKey(credentialsId: 'prod-ssh-key', keyFileVariable: 'KEY'),
-            usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
-        ]) {
-            sh '''
-                scp -i $KEY -o StrictHostKeyChecking=no compose-prod.yml $PROD_SSH_USER@$PROD_SERVER_IP:/home/debian/Jenkins-Trinity
-                ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP 'rm -rf /home/debian/www && mkdir -p /home/debian/www'
-                scp -i $KEY -o StrictHostKeyChecking=no -r client/build/* $PROD_SSH_USER@$PROD_SERVER_IP:/home/debian/www
-                ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP '
-                    docker login -u "$DOCKER_USER" --password "$DOCKER_PASS"
-                    docker pull $DOCKER_IMAGE:back_main
-                    docker compose -f Jenkins-Trinity/compose-prod.yml up -d
-                '
-            '''
+        stage('Deploy to Prod') {
+        when {
+            branch 'main'
+        }
+        steps {
+            withCredentials([
+                sshUserPrivateKey(credentialsId: 'prod-ssh-key', keyFileVariable: 'KEY'),
+                usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
+            ]) {
+                sh '''
+                    scp -i $KEY -o StrictHostKeyChecking=no compose-prod.yml $PROD_SSH_USER@$PROD_SERVER_IP:/home/debian/Jenkins-Trinity
+                    ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP 'rm -rf /home/debian/www && mkdir -p /home/debian/www'
+                    scp -i $KEY -o StrictHostKeyChecking=no -r client/build/* $PROD_SSH_USER@$PROD_SERVER_IP:/home/debian/www
+                    ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP '
+                        docker login -u "$DOCKER_USER" --password "$DOCKER_PASS"
+                        docker pull $DOCKER_IMAGE:latest
+                        docker compose -f Jenkins-Trinity/compose-prod.yml up -d
+                    '
+                '''
+            }
         }
     }
-}
 
     }
 }
