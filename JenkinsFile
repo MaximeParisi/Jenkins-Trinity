@@ -81,7 +81,7 @@ pipeline {
         stage('Build Client') {
             agent {
                 docker {
-                    image "node:${NODE_VERSION}-alpine"
+                    image "node:${NODE_VERSION}"
                 }
             }
             environment {
