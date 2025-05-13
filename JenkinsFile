@@ -133,7 +133,7 @@ pipeline {
                     ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP 'rm -rf /home/debian/www && mkdir -p /home/debian/www'
                     scp -i $KEY -o StrictHostKeyChecking=no -r client/build/* $PROD_SSH_USER@$PROD_SERVER_IP:/home/debian/www
                     ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP '
-                        docker login -u "$DOCKER_USER" --password "$DOCKER_PASS"
+                        docker login -u "$DOCKER_USER" --password "$DOCKER_PASS" 
                         docker compose -f Jenkins-Trinity/compose-prod.yml up -d
                     '
                 '''
