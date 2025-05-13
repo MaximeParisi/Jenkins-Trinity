@@ -7,7 +7,7 @@ pipeline {
         DOCKER_USER = 'maximeparisi'
         BRANCH_NAME = 'main'
         DEV_SSH_USER = 'debian'
-        DEV_SERVER_IP = '217.182.61.107:9090'
+        DEV_SERVER_IP = '217.182.61.107'
         PROD_SSH_USER = 'debian'
         PROD_SERVER_IP = '217.182.61.107'
 
@@ -105,7 +105,7 @@ pipeline {
                     sshUserPrivateKey(credentialsId: 'dev-ssh-key', keyFileVariable: 'KEY')
                 ]) {
                     sh '''
-                        scp -i $KEY -o StrictHostKeyChecking=no compose-staging.yml $DEV_SSH_USER@$DEV_SERVER_IP:~/
+                        scp -i $KEY -o StrictHostKeyChecking=no compose-staging.yml $DEV_SSH_USER@$DEV_SERVER_IP:~/Jenkins-Trinity
                         scp -i $KEY -o StrictHostKeyChecking=no client/build/* $DEV_SSH_USER@$DEV_SERVER_IP:/var/www/dev.gotham.titlepack.io/
                         ssh -i $KEY -o StrictHostKeyChecking=no $DEV_SSH_USER@$DEV_SERVER_IP '
                         docker login -u "$DOCKER_USER" --password "$DOCKER_PASS"
@@ -127,7 +127,7 @@ pipeline {
                     usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
                 ]) {
                     sh '''
-                        scp -i $KEY -o StrictHostKeyChecking=no compose-prod.yml $PROD_SSH_USER@$PROD_SERVER_IP:~/
+                        scp -i $KEY -o StrictHostKeyChecking=no compose-prod.yml $PROD_SSH_USER@$PROD_SERVER_IP:~/Jenkins-Trinity
                         scp -i $KEY -o StrictHostKeyChecking=no client/build/* $PROD_SSH_USER@$PROD_SERVER_IP:/var/www/gotham.titlepack.io/
                         ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP '
                         docker login -u "$DOCKER_USER" --password "$DOCKER_PASS"
