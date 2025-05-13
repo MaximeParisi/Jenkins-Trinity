@@ -1,6 +1,6 @@
 services:
   server-staging:
-    image: ${DOCKER_IMAGE}:back_${CI_COMMIT_REF_NAME}
+    image: jenkins-trinity-server:back_dev
     environment:
       NODE_ENV: production
       CLIENT_URL: 217.182.61.107

@@ -1,6 +1,6 @@
 services:
   server:
-    image: ${DOCKER_IMAGE}:back_${CI_COMMIT_REF_NAME}
+    image: jenkins-trinity-server:back_main
     environment:
       NODE_ENV: production
       CLIENT_URL: 217.182.61.107
