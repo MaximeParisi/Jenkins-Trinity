@@ -3,44 +3,22 @@ services:
     image: ${DOCKER_IMAGE}:back_${CI_COMMIT_REF_NAME}
     environment:
       NODE_ENV: production
-      CLIENT_URL: gotham.titlepack.io
-      MONGO_USER: $MONGO_USER
+      CLIENT_URL: 217.182.61.107
       PORT: 3001
-      MONGO_HOST: mongodb
-      MONGODB_URI: mongodb://$MONGO_USER:$MONGO_PASSWORD@mongo:27017/$MONGO_DB_NAME?authSource=admin
-      PAYPAL_CLIENT_ID: $PAYPAL_CLIENT_ID
-      PAYPAL_CLIENT_SECRET: $PAYPAL_CLIENT_SECRET
-      PAYPAL_RETURN_URL: https://dev.gotham.titlepack.io/#/paypalSuccess
-      PAYPAL_CANCEL_URL: https://dev.gotham.titlepack.io/#/paypalError
+      MONGODB_URI: mongodb://217.182.61.107:27017
     depends_on:
       - mongo
     networks:
       - shared_network
 
-  mongo:
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: $MONGO_USER
-      MONGO_INITDB_ROOT_PASSWORD: $MONGO_PASSWORD
-      MONGO_INITDB_DATABASE: $MONGO_DB_NAME
+  mongodb:
+    image: mongo:6-jammy
+    ports:
+      - "27017:27017"
     volumes:
-      - mongo_data:/data/db
+      - dbdata6:/data/db
     networks:
-      - shared_network
-
-  mongo-express:
-    image: mongo-express
-    restart: always
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: $MONGO_USER
-      ME_CONFIG_MONGODB_ADMINPASSWORD: $MONGO_PASSWORD
-      ME_CONFIG_BASICAUTH: true
-      ME_CONFIG_BASICAUTH_USERNAME: $ME_USER
-      ME_CONFIG_BASICAUTH_PASSWORD: $ME_PASSWORD
-      ME_CONFIG_MONGODB_URL: mongodb://$MONGO_USER:$MONGO_PASSWORD@mongo:27017
-    networks:
-      - shared_network
+      - node-network
 
 volumes:
   mongo_data:

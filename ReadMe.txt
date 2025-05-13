@@ -6,7 +6,8 @@ java -jar jenkins-plugin-manager-*.jar \
   --plugin-file ~/Documents/epitest/Jenkins-Trinity/jenkins/plugins.txt
 
 
-Cmd to run Jenkins Container with docker in
+
+Cmd to run Jenkins Container with docker in it
 
 docker run -d --name jenkins \
   -p 8080:8080 -p 50000:50000 \
@@ -19,4 +20,12 @@ docker run -d --name jenkins \
 
  docker start jenkins
 
- docker run -d -p 3000:5000 --name registry registry:2
+
+Cmd to run registry and database
+
+docker run -d -p 3000:5000 --restart=always --name registry \
+  -v /opt/registry/data:/var/lib/registry \
+  registry:2
+  
+ docker run -d --name mongodb -p 27017:27017 -v mongodata:/data/db mongo:7.0
+
