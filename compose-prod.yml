@@ -16,10 +16,11 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - dbdata6:/data/db
+      - mongo:/data/db
 
 volumes:
   mongo:
+
 networks:
   shared_network:
     external: true
