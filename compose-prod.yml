@@ -21,7 +21,7 @@ services:
       - node-network
 
 volumes:
-  mongo_data:
+  mongo:
 networks:
   shared_network:
     external: true
