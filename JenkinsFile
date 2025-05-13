@@ -10,10 +10,11 @@ pipeline {
         DEV_SERVER_IP = '217.182.61.107:9090'
         PROD_SSH_USER = 'debian'
         PROD_SERVER_IP = '217.182.61.107'
+
     }
 
     stages {
-        stage('Docker Login') {  
+        stage('Docker Login') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
@@ -56,7 +57,6 @@ pipeline {
         // stage('Build Backend Docker Image') {
         //     agent any
         //     steps {
-        
         //         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
         //             script {
         //                 sh "docker build ${DOCKER_USER}/${DOCKER_IMAGE}:back_${env.BRANCH_NAME ?: 'main'} backend/"
@@ -96,17 +96,7 @@ pipeline {
             }
         }
 
-        stage('Docker Login') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                    '''
-                }
-            }
-        }
-
-        stage('Deploy to Dev') {
+         stage('Deploy to Dev') {
             when {
                 branch 'dev'
             }
@@ -127,7 +117,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to Prod') {
+       stage('Deploy to Prod') {
             when {
                 branch 'main'
             }
