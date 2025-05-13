@@ -135,7 +135,7 @@ pipeline {
                 ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP '
                     docker login -u "$DOCKER_USER" --password "$DOCKER_PASS"
                     docker pull $DOCKER_IMAGE:back_main
-                    docker compose --env-file .env-prod -f compose-prod.yml up -d
+                    docker compose -f compose-prod.yml up -d
                 '
             '''
         }
