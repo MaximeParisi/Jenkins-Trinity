@@ -103,6 +103,15 @@ pipeline {
             }
         }
 
+        stage('Debug Branch') {
+    steps {
+        script {
+            echo "Detected branch: ${env.BRANCH_NAME}"
+        }
+    }
+}
+
+
         stage('Deploy to Dev') {
             when {
                 expression {
