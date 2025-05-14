@@ -132,7 +132,7 @@ pipeline {
         stage('Deploy to Dev') {
             when {
                 expression {
-                    return env.BRANCH_NAME == 'test'
+                    return env.BRANCH_NAME == 'dev'
                 }
             }
             steps {
