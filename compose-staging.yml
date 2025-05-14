@@ -7,7 +7,7 @@ services:
       PORT: 9090
       MONGODB_URI: mongodb://217.182.61.107:27018
     depends_on:
-      - mongodb-staging
+      - mongodb_staging
     networks:
       - shared_network
     
