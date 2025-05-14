@@ -1,4 +1,22 @@
 services:
+
+  client:
+      build:
+        context: ./client
+        dockerfile: Dockerfile.dev
+      environment:
+        NODE_ENV: development
+        PORT: 4000
+        HOST: 0.0.0.0
+        WATCHPACK_POLLING: true
+        FAST_REFRESH: false
+        REACT_APP_SERVER_URL: "http://217.182.61.107:3001"
+      ports:
+        - 4000:4000
+      volumes:
+        - ./client/src:/usr/src/app/src
+        - ./client/public:/usr/src/app/public
+
   server:
     image: maximeparisi/jenkins-trinity-server:prod
     environment:
