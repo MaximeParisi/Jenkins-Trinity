@@ -16,7 +16,7 @@ services:
     ports:
       - "27018:27018"
     volumes:
-      - dbdata6:/data/db
+      - mongo_staging:/data/db
 
 volumes:
   mongo_staging:
