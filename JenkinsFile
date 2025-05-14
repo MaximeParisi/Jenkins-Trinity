@@ -79,7 +79,7 @@ pipeline {
         //         }
         //     }
         // }
-       stage('DOCKER - Build/Push registry') {
+        stage('DOCKER - Build/Push registry') {
             agent any
             steps {
                 script {
@@ -109,7 +109,7 @@ pipeline {
             }
         }
 
-        stage('Init') {
+        stage('Get branch') {
             steps {
                 script {
                     def branchRaw = sh(script: "git name-rev --name-only HEAD", returnStdout: true).trim()
@@ -157,32 +157,29 @@ pipeline {
         
 
         stage('Deploy to Prod') {
-         when {
-            expression {
-                return env.BRANCH_NAME == 'main'
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'main'
+                }
+            }
+            steps {
+                withCredentials([
+                    sshUserPrivateKey(credentialsId: 'prod-ssh-key', keyFileVariable: 'KEY'),
+                    usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
+                ]) {
+                    sh '''
+                        scp -i $KEY -o StrictHostKeyChecking=no compose-prod.yml $PROD_SSH_USER@$PROD_SERVER_IP:/home/debian/Jenkins-Trinity
+                        ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP 'rm -rf /home/debian/www && mkdir -p /home/debian/www'
+                        scp -i $KEY -o StrictHostKeyChecking=no -r client/build/* $PROD_SSH_USER@$PROD_SERVER_IP:/home/debian/www
+                        ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP '
+                            docker login -u "$DOCKER_USER" --password "$DOCKER_PASS" 
+                            docker pull $DOCKER_USER/$DOCKER_IMAGE:prod
+                            docker network ls | grep shared_network || docker network create shared_network
+                            docker compose -f Jenkins-Trinity/compose-prod.yml up -d
+                        '
+                    '''
+                }
             }
         }
-
-        steps {
-            withCredentials([
-                sshUserPrivateKey(credentialsId: 'prod-ssh-key', keyFileVariable: 'KEY'),
-                usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
-            ]) {
-                sh '''
-                    scp -i $KEY -o StrictHostKeyChecking=no compose-prod.yml $PROD_SSH_USER@$PROD_SERVER_IP:/home/debian/Jenkins-Trinity
-                    ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP 'rm -rf /home/debian/www && mkdir -p /home/debian/www'
-                    scp -i $KEY -o StrictHostKeyChecking=no -r client/build/* $PROD_SSH_USER@$PROD_SERVER_IP:/home/debian/www
-                    ssh -i $KEY -o StrictHostKeyChecking=no $PROD_SSH_USER@$PROD_SERVER_IP '
-                        docker login -u "$DOCKER_USER" --password "$DOCKER_PASS" 
-                        docker pull $DOCKER_USER/$DOCKER_IMAGE:prod
-                        docker network ls | grep shared_network || docker network create shared_network
-                        docker compose -f Jenkins-Trinity/compose-prod.yml up -d
-                    '
-                '''
-            }
-        }
-    }
-
-
     }
 }
