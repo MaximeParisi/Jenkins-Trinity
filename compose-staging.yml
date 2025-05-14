@@ -5,7 +5,7 @@ services:
       NODE_ENV: production
       CLIENT_URL: 217.182.61.107
       PORT: 9090
-      MONGODB_URI: mongodb://217.182.61.107:27017
+      MONGODB_URI: mongodb://217.182.61.107:27018
     depends_on:
       - mongodb-staging
     networks:
@@ -14,11 +14,9 @@ services:
   mongodb_staging:
     image: mongo:6-jammy
     ports:
-      - "27017:27017"
+      - "27018:27018"
     volumes:
       - dbdata6:/data/db
-    networks:
-      - node-network
 
 volumes:
   mongo_staging:
