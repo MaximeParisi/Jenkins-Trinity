@@ -103,6 +103,16 @@ pipeline {
             }
         }
 
+        stage('Init') {
+    steps {
+        script {
+            def branch = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
+            env.BRANCH_NAME = branch
+            echo "Branch name (manual): ${env.BRANCH_NAME}"
+        }
+    }
+}
+
         stage('Debug Branch') {
     steps {
         script {
