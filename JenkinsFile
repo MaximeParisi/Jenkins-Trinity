@@ -17,6 +17,7 @@ pipeline {
         githubPush() 
     }
 
+
     stages {
         stage('Docker Login') {
             steps {
