@@ -1,5 +1,7 @@
 blueocean
 docker
+GitHub Integration Plugin
+GitHub Branch Source Plugin
 
 workflow-aggregator
 pipeline-stage-view
