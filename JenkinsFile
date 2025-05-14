@@ -13,10 +13,6 @@ pipeline {
 
     }
 
-    triggers {
-        githubPush() 
-    }
-
 
     stages {
         stage('Docker Login') {
