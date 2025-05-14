@@ -27,5 +27,4 @@ docker run -d -p 3000:5000 --restart=always --name registry \
   -v /opt/registry/data:/var/lib/registry \
   registry:2
   
- docker run -d --name mongodb -p 27017:27017 -v mongodata:/data/db mongo:7.0
 
