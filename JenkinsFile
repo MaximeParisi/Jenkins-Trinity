@@ -41,25 +41,22 @@ pipeline {
             }
         }
 
-        // stage('Test Client') {
-        //     agent {
-        //         docker {
-        //             image "node:${NODE_VERSION}"
-        //         }
-        //     }
-        //     environment {
-        //         REACT_APP_PAYPAL_CLIENT_ID = credentials('PAYPAL_CLIENT_ID')
-        //     }
-        //     steps {
-        //         dir('client') {
-        //             sh 'npm ci'
-        //             //sh 'npm test'
-        //         }
-        //     }
-        // }
-
-
-
+        stage('Test Client') {
+            agent {
+                docker {
+                    image "node:${NODE_VERSION}"
+                }
+            }
+            environment {
+                REACT_APP_PAYPAL_CLIENT_ID = credentials('PAYPAL_CLIENT_ID')
+            }
+            steps {
+                dir('client') {
+                    sh 'npm ci'
+                    //sh 'npm test'
+                }
+            }
+        }
 
 
 
@@ -87,23 +84,23 @@ pipeline {
             }
         }
 
-        // stage('Build Client') {
-        //     agent {
-        //         docker {
-        //             image "node:${NODE_VERSION}"
-        //         }
-        //     }
-        //     environment {
-        //         REACT_APP_PAYPAL_CLIENT_ID = credentials('PAYPAL_CLIENT_ID')
-        //     }
-        //     steps {
-        //         dir('client') {
-        //             sh 'npm ci'
-        //             sh 'npm run build'
-        //         }
-        //         archiveArtifacts artifacts: 'client/build/**', allowEmptyArchive: true
-        //     }
-        // }
+        stage('Build Client') {
+            agent {
+                docker {
+                    image "node:${NODE_VERSION}"
+                }
+            }
+            environment {
+                REACT_APP_PAYPAL_CLIENT_ID = credentials('PAYPAL_CLIENT_ID')
+            }
+            steps {
+                dir('client') {
+                    sh 'npm ci'
+                    sh 'npm run build'
+                }
+                archiveArtifacts artifacts: 'client/build/**', allowEmptyArchive: true
+            }
+        }
 
         stage('Deploy to Dev') {
             when {
