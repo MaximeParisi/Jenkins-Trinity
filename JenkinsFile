@@ -160,9 +160,10 @@ pipeline {
         stage('Deploy to Prod') {
          when {
             expression {
-                return env.BRANCH_NAME == 'main'
+                return env.BRANCH_NAME == 'dev'
             }
         }
+        
         steps {
             withCredentials([
                 sshUserPrivateKey(credentialsId: 'prod-ssh-key', keyFileVariable: 'KEY'),
