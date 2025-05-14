@@ -28,3 +28,8 @@ docker run -d -p 3000:5000 --restart=always --name registry \
   registry:2
   
 
+
+
+
+
+"test"
