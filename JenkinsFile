@@ -141,14 +141,14 @@ pipeline {
                     usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
                 ]) {
                     sh '''
-                        scp -i $KEY -o StrictHostKeyChecking=no compose-dev.yml $DEV_SSH_USER@$DEV_SERVER_IP:/home/debian/Jenkins-Trinity
+                        scp -i $KEY -o StrictHostKeyChecking=no compose-stagging.yml $DEV_SSH_USER@$DEV_SERVER_IP:/home/debian/Jenkins-Trinity
                         ssh -i $KEY -o StrictHostKeyChecking=no $DEV_SSH_USER@$DEV_SERVER_IP 'rm -rf /home/debian/www && mkdir -p /home/debian/www'
                         scp -i $KEY -o StrictHostKeyChecking=no -r client/build/* $DEV_SSH_USER@$DEV_SERVER_IP:/home/debian/www
                         ssh -i $KEY -o StrictHostKeyChecking=no $DEV_SSH_USER@$DEV_SERVER_IP '
                             docker login -u "$DOCKER_USER" --password "$DOCKER_PASS" 
                             docker pull $DOCKER_USER/$DOCKER_IMAGE:dev
                             docker network ls | grep shared_network || docker network create shared_network
-                            docker compose -f Jenkins-Trinity/compose-dev.yml up -d
+                            docker compose -f Jenkins-Trinity/compose-stagging.yml up -d
                         '
                     '''
                 }
