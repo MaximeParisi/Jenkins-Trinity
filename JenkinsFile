@@ -103,9 +103,29 @@ pipeline {
             }
         }
 
+        stage('Init') {
+            steps {
+                script {
+                    def branch = sh(script: "git rev-parse --abbrev-ref HEAD", returnStdout: true).trim()
+                    env.BRANCH_NAME = branch
+                    echo "Branch name (manual): ${env.BRANCH_NAME}"
+                }
+            }
+        }
+
+        stage('Debug Branch') {
+            steps {
+                script {
+                    echo "Detected branch: ${env.BRANCH_NAME}"
+                }
+            }
+        }
+
         stage('Deploy to Dev') {
             when {
-                branch 'dev'
+                expression {
+                    return env.BRANCH_NAME == 'dev'
+                }
             }
             steps {
                 withCredentials([
@@ -128,9 +148,12 @@ pipeline {
         }
         
 
+
         stage('Deploy to Prod') {
-        when {
-            branch 'main'
+         when {
+            expression {
+                return env.BRANCH_NAME == 'main'
+            }
         }
         steps {
             withCredentials([
