@@ -137,7 +137,7 @@ pipeline {
             }
             steps {
                 withCredentials([
-                    sshUserPrivateKey(credentialsId: 'dev-ssh-key', keyFileVariable: 'KEY'),
+                    sshUserPrivateKey(credentialsId: 'prod-ssh-key', keyFileVariable: 'KEY'),
                     usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')
                 ]) {
                     sh '''
