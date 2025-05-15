@@ -35,7 +35,7 @@ db.mongoose
   });
 
 var corsOptions = {
-  origin: [`${URL}`, "https://app.gotham.titlepack.io", "http://localhost:4000"],
+  origin: [`${URL}`, "https://app.gotham.titlepack.io", "http://localhost:4000", "http://217.182.61.107:4000"],
   credentials: true,
 };
 
