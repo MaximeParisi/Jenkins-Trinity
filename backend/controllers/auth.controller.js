@@ -82,7 +82,6 @@ exports.signin = async (req, res) => {
       fistname: user.firstName,
       lastName: user.lastName,
       phoneNumber: user.phoneNumber,
-      roles: authorities,
       token: token,
     });
   } catch (err) {
