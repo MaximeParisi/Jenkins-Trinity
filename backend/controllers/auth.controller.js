@@ -83,6 +83,7 @@ exports.signin = async (req, res) => {
       lastName: user.lastName,
       phoneNumber: user.phoneNumber,
       roles: authorities,
+      token: token,
     });
   } catch (err) {
     res.status(500).send({ message: err.message });
