@@ -5,7 +5,8 @@ const User = db.user;
 const Role = db.role;
 
 verifyToken = async (req, res, next) => {
-  const token = req.cookies["accessToken"];
+  const token = req.headers['authorization']?.split(' ')[1]
+             ||req.cookies["accessToken"];
 
   if (!token) {
     return res.status(403).send({ message: "No token provided!" });
