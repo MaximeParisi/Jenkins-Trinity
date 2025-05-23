@@ -1,5 +1,6 @@
 const Cart = require("../models/cart.model");
 const mongoose = require("mongoose");
+const Product = require("../models/Product");
 
 exports.createCart = async (req, res) => {
   try {
@@ -41,11 +42,16 @@ exports.getCart = async (req, res) => {
 exports.addToCart = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = req.body;
+    const productId = req.body;
 
     const cart = await Cart.findById(id);
     if (!cart) {
       return res.status(404).json({ message: "Cart not found" });
+    }
+
+    const product = await Product.findById(id);
+    if (!cart) {
+      return res.status(404).json({ message: "Product not found" });
     }
 
     let updatedProducts = Array.isArray(cart.products) ? [...cart.products, product] : [product];
