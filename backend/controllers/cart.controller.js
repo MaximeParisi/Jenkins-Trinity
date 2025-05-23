@@ -49,7 +49,7 @@ exports.addToCart = async (req, res) => {
       return res.status(404).json({ message: "Cart not found" });
     }
 
-    const product = await Product.findById(id);
+    const product = await Product.findById(productId);
     if (!cart) {
       return res.status(404).json({ message: "Product not found" });
     }
