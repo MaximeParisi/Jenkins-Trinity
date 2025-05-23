@@ -109,7 +109,7 @@ exports.setRole = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
 
     const deletedUser = await User.findByIdAndDelete(userId);
 
