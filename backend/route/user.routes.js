@@ -132,7 +132,7 @@ module.exports = function (app) {
    *       404:
    *         description: Utilisateur non trouvé
    */
-  app.delete("/api/users/:id", [authJwt.verifyToken, authJwt.isAdmin], controller.deleteUser);
+  app.delete("/api/users/", [authJwt.verifyToken, authJwt.isAdmin], controller.deleteUser);
 
   /**
  * @swagger
