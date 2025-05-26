@@ -3,8 +3,10 @@ const User = require("../models/user.model");
 
 const paypal = require("@paypal/checkout-server-sdk");
 
-const clientId = "ARs90tAriKVw_sPmOkCFn0jZkl6YONFG-cUsgulvtJ6ydTHZkzl8zMwnMlCMHnYTsv00lyTwH0M0YDDE";
-const clientSecret = "ARs90tAriKVw_sPmOkCFn0jZkl6YONFG-cUsgulvtJ6ydTHZkzl8zMwnMlCMHnYTsv00lyTwH0M0YDDE";
+const clientId = process.env.PAYPAL_CLIENT_ID;
+const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+console.log("CLIENT_ID =", clientId);
+
 
 const environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
 const client = new paypal.core.PayPalHttpClient(environment);
