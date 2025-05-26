@@ -6,6 +6,7 @@ const paypal = require("@paypal/checkout-server-sdk");
 const clientId = process.env.PAYPAL_CLIENT_ID;
 const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
 console.log("CLIENT_ID =", clientId);
+console.log("Client Secret:", clientSecret);
 
 
 const environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
