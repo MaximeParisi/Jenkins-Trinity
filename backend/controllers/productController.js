@@ -29,6 +29,21 @@ exports.addProduct = async (req, res) => {
   }
 };
 
+exports.getScannedProduct = async (req, res) => {
+  try {
+    const { barcode } = req.params;
+    const product = await setNutritionalValues(barcode, 1, 0);
+
+    if (product.error) {
+      return res.status(500).json(product);
+    }
+
+    res.status(201).json(product);
+  } catch (error) {
+    res.status(400).json({ message: "Database error" });
+  }
+};
+
 exports.updateProduct = async (req, res) => {
   try {
     const updatedProduct = await Product.findByIdAndUpdate(

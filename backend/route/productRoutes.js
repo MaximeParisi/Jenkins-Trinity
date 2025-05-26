@@ -106,6 +106,14 @@ module.exports = function (app) {
    *       500:
    *         description: Erreur serveur
    */
+
+    app.get(
+    "/api/products/barcode/:barcode",
+    [authJwt.verifyToken],
+    productController.getScannedProduct
+  );
+
+
   app.put(
     "/api/products/:id",
     [authJwt.verifyToken],
