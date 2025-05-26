@@ -24,8 +24,6 @@ services:
     environment:
       - MONGODB_URI=mongodb://mongodb:27017/node-boilerplate
       - CLIENT_URL=http://217.182.61.107:4000
-      - PAYPAL_CLIENT_ID=ARs90tAriKVw_sPmOkCFn0jZkl6YONFG-cUsgulvtJ6ydTHZkzl8zMwnMlCMHnYTsv00lyTwH0M0YDDE
-      - PAYPAL_CLIENT_SECRET=ARs90tAriKVw_sPmOkCFn0jZkl6YONFG-cUsgulvtJ6ydTHZkzl8zMwnMlCMHnYTsv00lyTwH0M0YDDE
     ports:
       - 3000:3000
     depends_on:
