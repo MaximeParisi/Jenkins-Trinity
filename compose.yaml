@@ -19,6 +19,8 @@ services:
   server:
     build:
       context: ./backend
+    env_file:
+      - ./backend/.env
     environment:
       - MONGODB_URI=mongodb://mongodb:27017/node-boilerplate
       - CLIENT_URL=http://217.182.61.107:4000
