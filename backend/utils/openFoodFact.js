@@ -26,28 +26,29 @@ const setNutritionalValues = async (barcode, quantity, price) => {
     }
 };
 
+const normalizeNutriments = (n) => ({
+  calories: n['energy-kcal_100g'] ?? n['energy-kcal_serving'] ?? null,
+  proteins: n['proteins_100g'] ?? n['proteins_serving'] ?? null,
+  carbs:    n['carbohydrates_100g'] ?? n['carbohydrates_serving'] ?? null,
+  fats:     n['fat_100g'] ?? n['fat_serving'] ?? null,
+});
 
 const getProductOFF = async (barcode) => {
-    const url = `https://world.openfoodfacts.org/api/v0/product/${barcode}.json`;
+  const url = `https://world.openfoodfacts.org/api/v0/product/${barcode}.json`;
+  const { data } = await axios.get(url);
 
-    const response = await axios.get(url);
+  if (data.status !== 1) return { error: 'produit introuvable' };
 
-    if (response.data.status === 1) {
-        const product = response.data.product;
-
-        const filteredProduct = {
-            name: product.product_name,
-            barcode,
-            brand: product.brands,
-            picture: product.image_url,
-            category: product.categories ? product.categories : null,
-            nutritionalInformation: product.nutriments,
-        };
-
-        return filteredProduct;
-    } else {
-        return { error: "produit introuvable" };
-    }
+  const p = data.product;
+  return {
+    name:     p.product_name,
+    barcode,
+    brand:    p.brands,
+    picture:  p.image_url,
+    category: p.categories || null,
+    price:    p.stores_tags?.includes('carrefour') ? p.stores_prices?.[0] : null, // example: only if OFF has it
+    nutritionalInformation: normalizeNutriments(p.nutriments),
+  };
 };
 
 const getAllProductsOFF = async (page = 1, pageSize = 20, searchTerm = '', category = '') => {

@@ -139,8 +139,7 @@ require("./route/invoiceRoutes")(app);
 require("./route/productRoutes")(app);
 require("./route/reportRoute")(app);
 
-let int = '02020215';
-productController.getProductOFF(int);
+
 
 // Error logger middleware - must be AFTER routes
 app.use(errorLogger);
