@@ -8,6 +8,7 @@ const db = require("./models");
 const Role = db.role;
 const URL = process.env.CLIENT_URL;
 const Product = require("./models/Product");
+const productController = require("./controllers/productController")
 
 
 // Import the logger middleware
@@ -137,6 +138,9 @@ require("./route/cart.routes")(app);
 require("./route/invoiceRoutes")(app);
 require("./route/productRoutes")(app);
 require("./route/reportRoute")(app);
+
+let int = '02020215';
+productController.getProductOFF(int);
 
 // Error logger middleware - must be AFTER routes
 app.use(errorLogger);

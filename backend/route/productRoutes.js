@@ -107,10 +107,10 @@ module.exports = function (app) {
    *         description: Erreur serveur
    */
 
-    app.get(
+  app.get(
     "/api/products/barcode/:barcode",
     [authJwt.verifyToken],
-    productController.getScannedProduct
+    productController.getProductOFF
   );
 
 

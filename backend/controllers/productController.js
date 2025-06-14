@@ -1,6 +1,5 @@
 const Product = require("../models/Product");
-const { setNutritionalValues, getAllProductsOFF } = require("../utils/openFoodFact");
-
+const { setNutritionalValues, getProductOFF, getAllProductsOFF } = require("../utils/openFoodFact");
 
 exports.getProducts = async (req, res) => {
   try {
@@ -10,6 +9,17 @@ exports.getProducts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getProductOFF = async (req, res) => {
+  try {
+    const { barcode } = req.params;
+    const product = await getProductOFF(barcode);
+    res.json(product);
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: error.message });
+  }
+}
 
 exports.addProduct = async (req, res) => {
   try {
@@ -24,21 +34,6 @@ exports.addProduct = async (req, res) => {
     const newProduct = new Product(product);
     const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
-  } catch (error) {
-    res.status(400).json({ message: "Database error" });
-  }
-};
-
-exports.getScannedProduct = async (req, res) => {
-  try {
-    const { barcode } = req.params;
-    const product = await setNutritionalValues(barcode, 1, 0);
-
-    if (product.error) {
-      return res.status(500).json(product);
-    }
-
-    res.status(201).json(product);
   } catch (error) {
     res.status(400).json({ message: "Database error" });
   }

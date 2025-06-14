@@ -26,6 +26,30 @@ const setNutritionalValues = async (barcode, quantity, price) => {
     }
 };
 
+
+const getProductOFF = async (barcode) => {
+    const url = `https://world.openfoodfacts.org/api/v0/product/${barcode}.json`;
+
+    const response = await axios.get(url);
+
+    if (response.data.status === 1) {
+        const product = response.data.product;
+
+        const filteredProduct = {
+            name: product.product_name,
+            barcode,
+            brand: product.brands,
+            picture: product.image_url,
+            category: product.categories ? product.categories : null,
+            nutritionalInformation: product.nutriments,
+        };
+
+        return filteredProduct;
+    } else {
+        return { error: "produit introuvable" };
+    }
+};
+
 const getAllProductsOFF = async (page = 1, pageSize = 20, searchTerm = '', category = '') => {
     try {
         const baseUrl = 'https://world.openfoodfacts.org/cgi/search.pl';
@@ -74,4 +98,4 @@ const getAllProductsOFF = async (page = 1, pageSize = 20, searchTerm = '', categ
 };
 
 
-module.exports = { setNutritionalValues, getAllProductsOFF };
+module.exports = { setNutritionalValues, getProductOFF, getAllProductsOFF };
