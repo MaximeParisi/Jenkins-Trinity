@@ -14,6 +14,7 @@ exports.getProductOFF = async (req, res) => {
   try {
     const { barcode } = req.params;
     const product = await getProductOFF(barcode);
+    console.log(product);
     res.json(product);
   } catch (error) {
       console.log(error);
