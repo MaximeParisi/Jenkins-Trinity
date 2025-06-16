@@ -67,6 +67,34 @@ exports.addToCart = async (req, res) => {
   }
 };
 
+exports.addToCartByBarcode = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { barcode } = req.body;
+
+    const cart = await Cart.findById(id);
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    const product = await Product.findOne( barcode);
+    if (!cart) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    let updatedProducts = Array.isArray(cart.products) ? [...cart.products, product] : [product];
+
+    cart.products = updatedProducts;
+    await cart.save();
+
+    res.status(200).json({ _id: cart._id, products: cart.products });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+    console.log(error)
+
+  }
+};
+
 exports.removeToCart = async (req, res) => {
   const { id } = req.params;
   const { product_id } = req.body;

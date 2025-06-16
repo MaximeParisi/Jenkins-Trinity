@@ -115,6 +115,8 @@ module.exports = function (app) {
    */
 
   app.put("/api/cart/add/:id", [authJwt.verifyToken], CartController.addToCart);
+  app.put("/api/cart/add/barcode/:id", [authJwt.verifyToken], CartController.addToCartByBarcode);
+
 
   /**
    * @swagger
