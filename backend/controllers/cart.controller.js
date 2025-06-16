@@ -77,7 +77,7 @@ exports.addToCartByBarcode = async (req, res) => {
       return res.status(404).json({ message: "Cart not found" });
     }
 
-    const product = await Product.find( barcode );
+    const product = await Product.findOne( {barcode: barcode} );
     if (!cart) {
       return res.status(404).json({ message: "Product not found" });
     }
