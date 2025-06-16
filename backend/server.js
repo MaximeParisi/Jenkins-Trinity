@@ -71,6 +71,7 @@ async function initProducts() {
       await Product.insertMany([
         {
           name: "Pâtes complètes",
+          barcode: "12345678",
           price: 2.49,
           brand: "Barilla",
           picture: "https://example.com/images/pates.jpg",
@@ -85,6 +86,7 @@ async function initProducts() {
         },
         {
           name: "Lait demi-écrémé",
+          barcode: "23456789",
           price: 1.05,
           brand: "Lactel",
           picture: "https://example.com/images/lait.jpg",
@@ -99,6 +101,7 @@ async function initProducts() {
         },
         {
           name: "Chocolat noir 70%",
+          barcode: "34567890",
           price: 2.30,
           brand: "Lindt",
           picture: "https://example.com/images/chocolat.jpg",
@@ -107,6 +110,21 @@ async function initProducts() {
             calories: 520,
             sugar: "29g",
             fats: "40g"
+          },
+          availableQuantity: 80
+        },
+        {
+          name: "Nutella",
+          barcode: "02020215",
+          price: 3.99,
+          brand: "Ferrero",
+          picture: "https://example.com/images/nutella.jpg",
+          category: "Pâte à tartiner",
+          nutritionalInformation: {
+            calories: 539,
+            proteins: "6g",
+            carbs: "57.5g",
+            fats: "30.9g"
           },
           availableQuantity: 80
         }

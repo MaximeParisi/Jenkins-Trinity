@@ -89,8 +89,8 @@ exports.addToCartByBarcode = async (req, res) => {
 
     res.status(200).json({ _id: cart._id, products: cart.products });
   } catch (error) {
-    res.status(400).json({ message: error.message });
     console.log(error)
+    res.status(400).json({ message: error.message });
 
   }
 };
